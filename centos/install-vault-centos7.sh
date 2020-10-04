@@ -2,8 +2,13 @@
 
 set -x
 
-NODENAME=vault1
+if [ -z "$1" ]
+  then
+    echo "usage: $0 NODENAME"
+    exit 1
+fi
 
+NODENAME=$1
 if [ $EUID -ne 0 ]; then
     echo "This script should be run as root." > /dev/stderr
     exit 1
