@@ -1,5 +1,8 @@
 #!/bin/bash 
 
+# Installs Vault node with self-signed certificate and 
+# enables VAULT_SKIP_VERIFY in shell
+
 set -x
 
 if [ -z "$1" ]
@@ -13,6 +16,9 @@ if [ $EUID -ne 0 ]; then
     echo "This script should be run as root." > /dev/stderr
     exit 1
 fi
+
+# Disable Vault TLS verification, since we're using self-signed certs
+grep 'VAULT_SKIP_VERIFY=true' ~/.bashrc &>/dev/null || echo 'export VAULT_SKIP_VERIFY=true' >> ~/.bashrc
 
 # Install prerequisites
 yum update -y
