@@ -124,14 +124,14 @@ storage "raft" {
     retry_join {
         leader_api_addr = "https://XXXX.test.io:8200"
         leader_ca_cert_file = "/etc/vault.d/tls/ca.crt"
-        leader_client_cert_file = "/etc/vault.d/tls/${NODENAME}.crt"
-        leader_client_key_file = "/etc/vault.d/tls/${NODENAME}.key"
+        leader_client_cert_file = "/etc/vault.d/tls/vault.crt"
+        leader_client_key_file = "/etc/vault.d/tls/vault.key"
     }
     retry_join {
         leader_api_addr = "https://YYYY.test.io:8200"
         leader_ca_cert_file = "/etc/vault.d/tls/ca.crt"
-        leader_client_cert_file = "/etc/vault.d/tls/${NODENAME}.crt"
-        leader_client_key_file = "/etc/vault.d/tls/${NODENAME}.key"
+        leader_client_cert_file = "/etc/vault.d/tls/vault.crt"
+        leader_client_key_file = "/etc/vault.d/tls/vault.key"
     }
 
 }
@@ -139,8 +139,8 @@ storage "raft" {
 listener "tcp" {
   address       = "0.0.0.0:8200"
   cluster_address = "0.0.0.0:8201"
-  tls_cert_file = "/etc/vault.d/tls/${NODENAME}.crt"
-  tls_key_file  = "/etc/vault.d/tls/${NODENAME}.key"
+  tls_cert_file = "/etc/vault.d/tls/vault.crt"
+  tls_key_file  = "/etc/vault.d/tls/vault.key"
 }
 
 cluster_addr = "https://${NODENAME}:8201"
@@ -191,33 +191,35 @@ EOF
 cat >csr.cnf <<EOF
 [req]
 distinguished_name = req_distinguished_name
-x509_extensions = v3_req
+req_extensions = v3_req
 prompt = no
 [req_distinguished_name]
 C = US
-ST = Texas
+ST = TX
 L = Houston
-O = Hashicorp
-OU = Engineering
-CN = ${NODENAME}.test.io
+O = Hashicorp POC
+OU = Solution Engineering
+CN = vault
 [v3_req]
+keyUsage = keyEncipherment, dataEncipherment
 extendedKeyUsage = serverAuth
 subjectAltName = @alt_names
 [alt_names]
-DNS.1 = ${NODENAME}
-DNS.2 = ${NODENAME}.test
-DNS.2 = ${NODENAME}.test.io
+DNS.1 = vault1.test.io
+DNS.2 = vault2.test.io
+DNS.3 = vault3.test.io
+DNS.4 = localhost
 IP.1 = 127.0.0.1
-IP.2 = ${IPADDR}
 EOF
 
-openssl req -out ${NODENAME}.req -newkey rsa:2048 -nodes -keyout ${NODENAME}.key -config csr.cnf
+openssl req -out vault.req -newkey rsa:2048 -nodes -keyout vault.key -config csr.cnf
+
 
 mkdir -p /etc/vault.d/tls
 cp ${NODENAME}.key /etc/vault.d/tls
 
-echo "ATTENTION: A CSR has been created in ${NODENAME}.req.  Please have this signed and"
-echo "           place the resulting certificate in /etc/vault.d/tls/${NODENAME}.crt."
+echo "ATTENTION: A CSR has been created in vault.req.  Please have this signed and"
+echo "           place the resulting certificate in /etc/vault.d/tls/vault.crt."
 
 
 # Enable Vault
