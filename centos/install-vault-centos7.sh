@@ -175,7 +175,7 @@ WantedBy=multi-user.target
 EOF
 
 # Generate TLS key and cert signing request
-openssl req -out ${NODENAME}.req -newkey rsa:2048 -nodes -keyout ${NODENAME}.key -config - << EOF
+cat >csr.cnf <<EOF
 [req]
 distinguished_name = req_distinguished_name
 x509_extensions = v3_req
@@ -197,6 +197,8 @@ DNS.2 = ${NODENAME}.test.io
 IP.1 = 127.0.0.1
 IP.2 = ${IPADDR}
 EOF
+
+openssl req -out ${NODENAME}.req -newkey rsa:2048 -nodes -keyout ${NODENAME}.key -config csr.cnf
 
 echo "ATTENTION: A CSR has been created in ${NODENAME}.req.  Please have this signed and"
 echo "           place the resulting certificate in /etc/vault.d/tls/${NODENAME}.crt."
