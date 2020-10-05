@@ -126,12 +126,12 @@ storage "raft" {
 listener "tcp" {
   address       = "0.0.0.0:8200"
   cluster_address = "0.0.0.0:8201"
-  tls_cert_file = "/etc/vault.d/${NODENAME}.crt"
-  tls_key_file  = "/etc/vault.d/${NODENAME}.key"
+  tls_cert_file = "/etc/vault.d/tls/${NODENAME}.crt"
+  tls_key_file  = "/etc/vault.d/tls/${NODENAME}.key"
 }
 
-cluster_addr = "https://${IPADDR}:8201"
-api_addr = "https://${IPADDR}:8200"
+cluster_addr = "https://${NODENAME}:8201"
+api_addr = "https://${NODENAME}:8200"
 
 ui = true
 EOF
@@ -199,6 +199,9 @@ IP.2 = ${IPADDR}
 EOF
 
 openssl req -out ${NODENAME}.req -newkey rsa:2048 -nodes -keyout ${NODENAME}.key -config csr.cnf
+
+mkdir -p /etc/vault.d/tls
+cp ${NODENAME}.key /etc/vault.d/tls
 
 echo "ATTENTION: A CSR has been created in ${NODENAME}.req.  Please have this signed and"
 echo "           place the resulting certificate in /etc/vault.d/tls/${NODENAME}.crt."
