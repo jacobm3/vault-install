@@ -119,8 +119,21 @@ chmod -R 750 $DATA
 # Setup server config 
 cat > /etc/vault.d/vault.hcl <<EOF
 storage "raft" {
-  path    = "${DATA}"
-  node_id = "${NODENAME}"
+    path    = "${DATA}"
+    node_id = "${NODENAME}"
+    retry_join {
+        leader_api_addr = "https://XXXX.test.io:8200"
+        leader_ca_cert_file = "/etc/vault.d/tls/ca.crt"
+        leader_client_cert_file = "/etc/vault.d/tls/${NODENAME}.crt"
+        leader_client_key_file = "/etc/vault.d/tls/${NODENAME}.key"
+    }
+    retry_join {
+        leader_api_addr = "https://YYYY.test.io:8200"
+        leader_ca_cert_file = "/etc/vault.d/tls/ca.crt"
+        leader_client_cert_file = "/etc/vault.d/tls/${NODENAME}.crt"
+        leader_client_key_file = "/etc/vault.d/tls/${NODENAME}.key"
+    }
+
 }
 
 listener "tcp" {
