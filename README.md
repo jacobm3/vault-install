@@ -104,3 +104,44 @@ https://www.vaultproject.io/docs/commands/operator/init
     ----      -------           -----     -----
     vault1    127.0.0.1:8201    leader    true
 
+# Final Goal
+
+    root@vault1:/etc/vault.d (05:27 AM - Mon Oct 05) v
+    # cat vault.hcl
+    storage "raft" {
+    path    = "/var/vault/data"
+    node_id = "vault1"
+        retry_join {
+        leader_api_addr = "https://vault2.test.io:8200"
+        leader_ca_cert_file = "/etc/vault.d/tls/ca.crt"
+        leader_client_cert_file = "/etc/vault.d/tls/vault1.crt"
+        leader_client_key_file = "/etc/vault.d/tls/vault1.key"
+        }
+        retry_join {
+        leader_api_addr = "https://vault3.test.io:8200"
+        leader_ca_cert_file = "/etc/vault.d/tls/ca.crt"
+        leader_client_cert_file = "/etc/vault.d/tls/vault1.crt"
+        leader_client_key_file = "/etc/vault.d/tls/vault1.key"
+        }
+    }
+
+    listener "tcp" {
+    address       = "0.0.0.0:8200"
+    cluster_address = "0.0.0.0:8201"
+    tls_cert_file = "/etc/vault.d/tls/vault1.crt"
+    tls_key_file  = "/etc/vault.d/tls/vault1.key"
+    ca_cert_file = "/etc/vault.d/tls/ca.crt"
+    }
+
+    cluster_addr = "https://vault1.test.io:8201"
+    api_addr = "https://vault1.test.io:8200"
+
+    ui = true
+
+    root@vault1:/etc/vault.d (05:27 AM - Mon Oct 05) v
+    # vault operator raft list-peers
+    Node      Address                State       Voter
+    ----      -------                -----       -----
+    vault2    vault2.test.io:8201    leader      true
+    vault3    vault3.test.io:8201    follower    true
+    vault1    vault1.test.io:8201    follower    true
