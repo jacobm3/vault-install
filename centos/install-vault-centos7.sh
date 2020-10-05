@@ -125,11 +125,12 @@ storage "raft" {
 
 listener "tcp" {
   address       = "0.0.0.0:8200"
+  cluster_address = "0.0.0.0:8201"
   tls_cert_file = "/etc/vault.d/vault-cert.${NODENAME}.pem"
   tls_key_file  = "/etc/vault.d/vault-key.${NODENAME}.pem"
 }
 
-cluster_addr = "https://127.0.0.1:8201"
+cluster_addr = "https://${IPADDR}:8201"
 api_addr = "https://${IPADDR}:8200"
 
 ui = true

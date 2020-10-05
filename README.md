@@ -66,7 +66,7 @@ https://www.vaultproject.io/docs/commands/operator/init
     Raft Committed Index    51
     Raft Applied Index      51
 
-# Login with root token
+# Login and Apply Enterprise License
 
     $ vault login
     Token (will be hidden): <provide root token>
@@ -84,8 +84,6 @@ https://www.vaultproject.io/docs/commands/operator/init
     identity_policies    []
     policies             ["root"]
 
-
-# Apply Enterprise License
 
     $ vault write sys/license text="02MV4UU43BK5HGYYTOJZWFQMT... </snip>... HU6Q"
     Success! Data written to: sys/license
@@ -105,3 +103,4 @@ https://www.vaultproject.io/docs/commands/operator/init
     Node      Address           State     Voter
     ----      -------           -----     -----
     vault1    127.0.0.1:8201    leader    true
+
