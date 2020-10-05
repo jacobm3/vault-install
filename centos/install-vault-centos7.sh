@@ -66,45 +66,45 @@ chmod 640 /etc/vault.d/vault.hcl
 
 IPADDR=`ifconfig eth0 | grep 'inet ' | awk '{print $2}'`
 
-# Generate Vault's client-facing key & certificate
-SSLCONF=.ssl-req.conf
-cat > $SSLCONF <<EOF
-[req]
-distinguished_name = req_distinguished_name
-x509_extensions = v3_req
-prompt = no
-[req_distinguished_name]
-C = US
-ST = Texas
-L = Houston
-O = Hashicorp
-OU = Engineering
-CN = *
-[v3_req]
-extendedKeyUsage = serverAuth
-subjectAltName = @alt_names
-[alt_names]
-DNS.1 = *
-DNS.2 = *.*
-DNS.3 = *.*.*
-DNS.4 = *.*.*.*
-DNS.5 = *.*.*.*.*
-DNS.6 = *.*.*.*.*.*
-DNS.7 = *.*.*.*.*.*.*
-IP.1 = $IPADDR
-IP.2 = 127.0.0.1
-EOF
+# # Generate Vault's client-facing key & certificate
+# SSLCONF=.ssl-req.conf
+# cat > $SSLCONF <<EOF
+# [req]
+# distinguished_name = req_distinguished_name
+# x509_extensions = v3_req
+# prompt = no
+# [req_distinguished_name]
+# C = US
+# ST = Texas
+# L = Houston
+# O = Hashicorp
+# OU = Engineering
+# CN = *
+# [v3_req]
+# extendedKeyUsage = serverAuth
+# subjectAltName = @alt_names
+# [alt_names]
+# DNS.1 = *
+# DNS.2 = *.*
+# DNS.3 = *.*.*
+# DNS.4 = *.*.*.*
+# DNS.5 = *.*.*.*.*
+# DNS.6 = *.*.*.*.*.*
+# DNS.7 = *.*.*.*.*.*.*
+# IP.1 = $IPADDR
+# IP.2 = 127.0.0.1
+# EOF
 
-openssl req -days 730 -x509 -nodes -newkey rsa:2048 \
-  -keyout  vault-key.${NODENAME}.pem \
-  -out vault-cert.${NODENAME}.pem \
-  -config $SSLCONF -extensions 'v3_req'
+# openssl req -days 730 -x509 -nodes -newkey rsa:2048 \
+#   -keyout  vault-key.${NODENAME}.pem \
+#   -out vault-cert.${NODENAME}.pem \
+#   -config $SSLCONF -extensions 'v3_req'
 
 #cp vault-cert.${NODENAME}.pem /etc/pki/ca-trust/source/anchors
 #update-ca-trust extract
-cat vault-cert.vault1.pem >> /etc/pki/tls/certs/ca-bundle.crt
+#cat vault-cert.vault1.pem >> /etc/pki/tls/certs/ca-bundle.crt
 
-cp vault-cert.${NODENAME}.pem vault-key.${NODENAME}.pem /etc/vault.d
+# cp vault-cert.${NODENAME}.pem vault-key.${NODENAME}.pem /etc/vault.d
 
 chown --recursive vault:vault /etc/vault.d
 chmod 640 /etc/vault.d/*
@@ -126,8 +126,8 @@ storage "raft" {
 listener "tcp" {
   address       = "0.0.0.0:8200"
   cluster_address = "0.0.0.0:8201"
-  tls_cert_file = "/etc/vault.d/vault-cert.${NODENAME}.pem"
-  tls_key_file  = "/etc/vault.d/vault-key.${NODENAME}.pem"
+  tls_cert_file = "/etc/vault.d/${NODENAME}.crt"
+  tls_key_file  = "/etc/vault.d/${NODENAME}.key"
 }
 
 cluster_addr = "https://${IPADDR}:8201"
@@ -174,10 +174,38 @@ LimitMEMLOCK=infinity
 WantedBy=multi-user.target
 EOF
 
-# Enable and start Vault
-systemctl enable vault
-systemctl start vault
-systemctl status vault
+# Generate TLS key and cert signing request
+openssl req -out ${NODENAME}.req -newkey rsa:2048 -nodes -keyout ${NODENAME}.key -config - << EOF
+[req]
+distinguished_name = req_distinguished_name
+x509_extensions = v3_req
+prompt = no
+[req_distinguished_name]
+C = US
+ST = Texas
+L = Houston
+O = Hashicorp
+OU = Engineering
+CN = ${NODENAME}.test.io
+[v3_req]
+extendedKeyUsage = serverAuth
+subjectAltName = @alt_names
+[alt_names]
+DNS.1 = ${NODENAME}
+DNS.2 = ${NODENAME}.test
+DNS.2 = ${NODENAME}.test.io
+IP.1 = 127.0.0.1
+IP.2 = ${IPADDR}
+EOF
+
+echo "ATTENTION: A CSR has been created in ${NODENAME}.req.  Please have this signed and"
+echo "           place the resulting certificate in /etc/vault.d/tls/${NODENAME}.crt."
+
+
+# Enable Vault
+# systemctl enable vault
+#systemctl start vault
+#systemctl status vault
 
 
 
