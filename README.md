@@ -254,6 +254,9 @@ Doing the same thing on vault2 yields similar results.
     vault3    vault3:8201    follower    true
     vault2    vault2:8201    follower    true
 
+&nbsp;  
+&nbsp;  
+
 # Congratulations!
 
 Your Vault cluster is now operational!
