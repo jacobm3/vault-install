@@ -14,6 +14,8 @@ These commands will download and execute the install script, which will do a yum
     git clone https://github.com/jacobm3/vault-install.git
     sudo ./vault-install/centos/install-vault-centos7.sh `hostname`
 
+
+
 # First Node Setup
 
 ## Initialize the First Vault Node
@@ -124,6 +126,8 @@ if this happens before you have an opportunity to enter it again.
     Node      Address        State     Voter
     ----      -------        -----     -----
     vault1    vault1:8201    leader    true
+
+
 
 # Setup Remaining Nodes
 
