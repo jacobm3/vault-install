@@ -1,18 +1,27 @@
-# Base Vault Install
+# Base Vault Install on Each Node
 
-This will download the install script, which will do a yum update, install a couple dependencies, install Vault with raft integrated storage and a self-signed certificate. Do this on each Vault server node.
+Copy the certificate/key tarball to `~centos/certs.tgz` on each Vault server node.
+
+    # tar ztf ~centos/certs.tgz
+    ca.crt
+    vault.crt
+    vault.key
+
+
+These commands will download and execute the install script, which will do a yum update, install dependencies, install Vault with raft integrated storage and a self-signed certificate. Do this on each Vault server node.
 
     sudo yum install -y git
     git clone https://github.com/jacobm3/vault-install.git
-    cd vault-install/centos
-    sudo ./install-vault-centos7.sh NODENAME
+    sudo ./vault-install/centos/install-vault-centos7.sh `hostname`
 
-# Initialize Vault
+# First Node Setup
 
-Here I'm initializing with 1 recovery key and encrypting the recovery with my PGP public key. PGP keys should be used to securely distribute key shards to Vault admins when using Shamir secret sharing. 
+## Initialize the First Vault Node
+
+Here I'm initializing with 1 recovery key and encrypting the recovery key with my PGP public key for safe delivery. PGP keys should be used to securely distribute key shards to Vault admins when using Shamir secret sharing to provide separation of duties. 
 
 
-    $ vault operator init -n 1 -t 1 -pgp-keys=jacob.asc
+    $ vault operator init -key-shares=1 -key-threshold=1 -pgp-keys=jacob.asc
     Unseal Key 1: wcDMA9FTNzae4vyUAQwAiBSHW/AUPnmfP/plFgUsZfNT3oXKrIc1Z7WI1n1pNX+qfpsQ/wTMWG87v50MBOV1P6N95gK+MHO4ZGWsrQSlB5bVdiqiAcBx2g6n3iIJiUF+ZWCGXd0XagSZ8kgEeF8blWG7emZVEFfl6+pd9ClrX9dUw/yyTLjZ4VBmVlkYPGqTB8ne5Gjxx8aJbAvdhJZttvtuvg+FbBhE1V++m04iMK0TQcjTl8s+jLR/23CmfJYR0m3q8SvNkNpzQ4GYpbU
 
     Initial Root Token: s.PCrv6L7che3Yg7ruBpxltZCc
@@ -34,9 +43,12 @@ For more information on `operator init` options, see:
 https://learn.hashicorp.com/tutorials/vault/getting-started-deploy#initializing-the-vault
 https://www.vaultproject.io/docs/commands/operator/init
 
-# Each Vault admin decrypts their unseal key
+## Each Vault admin decrypts their unseal key
 
-    # Save unseal key output as a binary file
+    # Save unseal key output to unseal.enc on the machine where you have your PGP key (run this command, paste the value, then hit enter, ctrl-d)
+    cat > unseal.enc
+
+    # Convert to a binary file
     base64 -d < unseal.enc > unseal.bin
 
     # Decrypt with pgp/gpg
@@ -45,7 +57,7 @@ https://www.vaultproject.io/docs/commands/operator/init
       "Jacob Martinson <jacob7719@gmail.com>"
     9cb8ee50c4fe90b4e905b9be404c3384d4afa25377e1be25dfff0f5fed9c947e
 
-# Unseal the first node
+## Unseal the first node
 
     $ vault operator unseal
     Unseal Key (will be hidden): <provide decrypted key here>
@@ -66,7 +78,7 @@ https://www.vaultproject.io/docs/commands/operator/init
     Raft Committed Index    51
     Raft Applied Index      51
 
-# Login and Apply Enterprise License
+## Login and Apply Enterprise License
 
     $ vault login
     Token (will be hidden): <provide root token>
@@ -97,51 +109,134 @@ https://www.vaultproject.io/docs/commands/operator/init
     performance_standby_count    9999
     start_time                   2020-10-01T00:00:00Z
 
-# First node is the only node in cluster
+## First node is the only node in cluster
 
     $ vault operator raft list-peers
-    Node      Address           State     Voter
-    ----      -------           -----     -----
-    vault1    127.0.0.1:8201    leader    true
+    Node      Address        State     Voter
+    ----      -------        -----     -----
+    vault1    vault1:8201    leader    true
 
-# Final Goal
+# Setup Remaining Nodes
 
-    root@vault1:/etc/vault.d (05:27 AM - Mon Oct 05) v
-    # cat vault.hcl
+## Update vault.hcl with leader info
+
+Edit `/etc/vault.d/vault.hcl` on the remaining two nodes and add the hostnames of the other 
+two nodes in the retry join section. For example, the `vault2` node storage block should
+look like this:
+
     storage "raft" {
-    path    = "/var/vault/data"
-    node_id = "vault1"
+        path    = "/var/vault/data"
+        node_id = "vault2"
         retry_join {
-        leader_api_addr = "https://vault2.test.io:8200"
-        leader_ca_cert_file = "/etc/vault.d/tls/ca.crt"
-        leader_client_cert_file = "/etc/vault.d/tls/vault1.crt"
-        leader_client_key_file = "/etc/vault.d/tls/vault1.key"
+            leader_api_addr = "https://vault1.test.io:8200"
+            leader_ca_cert_file = "/etc/vault.d/tls/ca.crt"
+            leader_client_cert_file = "/etc/vault.d/tls/vault.crt"
+            leader_client_key_file = "/etc/vault.d/tls/vault.key"
         }
         retry_join {
-        leader_api_addr = "https://vault3.test.io:8200"
-        leader_ca_cert_file = "/etc/vault.d/tls/ca.crt"
-        leader_client_cert_file = "/etc/vault.d/tls/vault1.crt"
-        leader_client_key_file = "/etc/vault.d/tls/vault1.key"
+            leader_api_addr = "https://vault3.test.io:8200"
+            leader_ca_cert_file = "/etc/vault.d/tls/ca.crt"
+            leader_client_cert_file = "/etc/vault.d/tls/vault.crt"
+            leader_client_key_file = "/etc/vault.d/tls/vault.key"
         }
     }
 
-    listener "tcp" {
-    address       = "0.0.0.0:8200"
-    cluster_address = "0.0.0.0:8201"
-    tls_cert_file = "/etc/vault.d/tls/vault1.crt"
-    tls_key_file  = "/etc/vault.d/tls/vault1.key"
-    ca_cert_file = "/etc/vault.d/tls/ca.crt"
+The `vault3` node storage block should look like this:
+
+    storage "raft" {
+        path    = "/var/vault/data"
+        node_id = "vault3"
+        retry_join {
+            leader_api_addr = "https://vault1.test.io:8200"
+            leader_ca_cert_file = "/etc/vault.d/tls/ca.crt"
+            leader_client_cert_file = "/etc/vault.d/tls/vault.crt"
+            leader_client_key_file = "/etc/vault.d/tls/vault.key"
+        }
+        retry_join {
+            leader_api_addr = "https://vault2.test.io:8200"
+            leader_ca_cert_file = "/etc/vault.d/tls/ca.crt"
+            leader_client_cert_file = "/etc/vault.d/tls/vault.crt"
+            leader_client_key_file = "/etc/vault.d/tls/vault.key"
+        }
     }
 
-    cluster_addr = "https://vault1.test.io:8201"
-    api_addr = "https://vault1.test.io:8200"
+Restart vault to make the changes take effect.
 
-    ui = true
+    $ sudo systemctl stop vault; sudo systemctl start vault
 
-    root@vault1:/etc/vault.d (05:27 AM - Mon Oct 05) v
-    # vault operator raft list-peers
-    Node      Address                State       Voter
-    ----      -------                -----       -----
-    vault2    vault2.test.io:8201    leader      true
-    vault3    vault3.test.io:8201    follower    true
-    vault1    vault1.test.io:8201    follower    true
+## Unseal and Login
+
+On each of the remaining nodes (vault2 and vault3), unseal the storage layer and
+login with the root roken.
+
+$  vault operator unseal
+Unseal Key (will be hidden):
+Key                Value
+---                -----
+Seal Type          shamir
+Initialized        true
+Sealed             true
+Total Shares       1
+Threshold          1
+Unseal Progress    0/1
+Unseal Nonce       n/a
+Version            1.5.4+ent
+HA Enabled         true
+
+It takes a moment for the challenge/response to complete, then it will show unsealed
+and part of an HA cluster.
+
+$ vault status
+Key                                    Value
+---                                    -----
+Seal Type                              shamir
+Initialized                            true
+Sealed                                 false
+Total Shares                           1
+Threshold                              1
+Version                                1.5.4+ent
+Cluster Name                           vault-cluster-4df4ca03
+Cluster ID                             aa77c290-5671-c093-8f92-a83375313de1
+HA Enabled                             true
+HA Cluster                             https://vault1:8201
+HA Mode                                standby
+Active Node Address                    https://vault1:8200
+Performance Standby Node               true
+Performance Standby Last Remote WAL    0
+Raft Committed Index                   335
+Raft Applied Index                     335
+
+$ vault login 
+Token (will be hidden):
+Success! You are now authenticated. The token information displayed below
+is already stored in the token helper. You do NOT need to run "vault login"
+again. Future Vault requests will automatically use this token.
+
+Key                  Value
+---                  -----
+token                s.Pw0Iksoxir25l3bZGHZbtknK
+token_accessor       F8giRJ0OPjIn36GVP2ri8YV0
+token_duration       ∞
+token_renewable      false
+token_policies       ["root"]
+identity_policies    []
+policies             ["root"]
+
+$ vault operator raft list-peers
+Node      Address        State       Voter
+----      -------        -----       -----
+vault1    vault1:8201    leader      true
+vault3    vault3:8201    follower    true
+
+Doing the same thing on vault2 yields similar results.
+
+    $ vault operator raft list-peers
+    Node      Address        State       Voter
+    ----      -------        -----       -----
+    vault1    vault1:8201    leader      true
+    vault3    vault3:8201    follower    true
+    vault2    vault2:8201    follower    true
+
+# Congratulations!
+
+Your Vault cluster is now operational!
