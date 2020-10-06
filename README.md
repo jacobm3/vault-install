@@ -45,7 +45,7 @@ https://learn.hashicorp.com/tutorials/vault/getting-started-deploy#initializing-
 
 https://www.vaultproject.io/docs/commands/operator/init
 
-## Each Vault admin decrypts their unseal key
+## Each Vault Admin Decrypts their Unseal Key
 
     # Save unseal key output to unseal.enc on the machine where you have your PGP key 
     # (run this command, paste the value, then hit enter, ctrl-d)
@@ -60,7 +60,7 @@ https://www.vaultproject.io/docs/commands/operator/init
       "Jacob Martinson <jacob@gmail.com>"
     9cb8ee50c4fe90b4e905b9be404c3384d4afa25377e1be25dfff0f5fed9c947e
 
-## Unseal the first node
+## Unseal the First Node
 
     $ vault operator unseal
     Unseal Key (will be hidden): <provide decrypted key here>
@@ -124,7 +124,7 @@ https://www.vaultproject.io/docs/commands/operator/init
 ## Update vault.hcl with leader info
 
 Edit `/etc/vault.d/vault.hcl` on the remaining two nodes and add the hostnames of the other 
-two nodes in the retry join section. For example, the `vault2` node storage block should
+two nodes in the retry_join sections. For example, the `vault2` node storage block should
 look like this:
 
     storage "raft" {
