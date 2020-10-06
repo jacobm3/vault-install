@@ -175,64 +175,64 @@ Restart vault to make the changes take effect.
 On each of the remaining nodes (vault2 and vault3), unseal the storage layer and
 login with the root roken.
 
-$  vault operator unseal
-Unseal Key (will be hidden):
-Key                Value
----                -----
-Seal Type          shamir
-Initialized        true
-Sealed             true
-Total Shares       1
-Threshold          1
-Unseal Progress    0/1
-Unseal Nonce       n/a
-Version            1.5.4+ent
-HA Enabled         true
+    $  vault operator unseal
+    Unseal Key (will be hidden):
+    Key                Value
+    ---                -----
+    Seal Type          shamir
+    Initialized        true
+    Sealed             true
+    Total Shares       1
+    Threshold          1
+    Unseal Progress    0/1
+    Unseal Nonce       n/a
+    Version            1.5.4+ent
+    HA Enabled         true
 
 It takes a moment for the challenge/response to complete, then it will show unsealed
 and part of an HA cluster.
 
-$ vault status
-Key                                    Value
----                                    -----
-Seal Type                              shamir
-Initialized                            true
-Sealed                                 false
-Total Shares                           1
-Threshold                              1
-Version                                1.5.4+ent
-Cluster Name                           vault-cluster-4df4ca03
-Cluster ID                             aa77c290-5671-c093-8f92-a83375313de1
-HA Enabled                             true
-HA Cluster                             https://vault1:8201
-HA Mode                                standby
-Active Node Address                    https://vault1:8200
-Performance Standby Node               true
-Performance Standby Last Remote WAL    0
-Raft Committed Index                   335
-Raft Applied Index                     335
+    $ vault status
+    Key                                    Value
+    ---                                    -----
+    Seal Type                              shamir
+    Initialized                            true
+    Sealed                                 false
+    Total Shares                           1
+    Threshold                              1
+    Version                                1.5.4+ent
+    Cluster Name                           vault-cluster-4df4ca03
+    Cluster ID                             aa77c290-5671-c093-8f92-a83375313de1
+    HA Enabled                             true
+    HA Cluster                             https://vault1:8201
+    HA Mode                                standby
+    Active Node Address                    https://vault1:8200
+    Performance Standby Node               true
+    Performance Standby Last Remote WAL    0
+    Raft Committed Index                   335
+    Raft Applied Index                     335
 
-$ vault login 
-Token (will be hidden):
-Success! You are now authenticated. The token information displayed below
-is already stored in the token helper. You do NOT need to run "vault login"
-again. Future Vault requests will automatically use this token.
+    $ vault login 
+    Token (will be hidden):
+    Success! You are now authenticated. The token information displayed below
+    is already stored in the token helper. You do NOT need to run "vault login"
+    again. Future Vault requests will automatically use this token.
 
-Key                  Value
----                  -----
-token                s.Pw0Iksoxir25l3bZGHZbtknK
-token_accessor       F8giRJ0OPjIn36GVP2ri8YV0
-token_duration       ∞
-token_renewable      false
-token_policies       ["root"]
-identity_policies    []
-policies             ["root"]
+    Key                  Value
+    ---                  -----
+    token                s.Pw0Iksoxir25l3bZGHZbtknK
+    token_accessor       F8giRJ0OPjIn36GVP2ri8YV0
+    token_duration       ∞
+    token_renewable      false
+    token_policies       ["root"]
+    identity_policies    []
+    policies             ["root"]
 
-$ vault operator raft list-peers
-Node      Address        State       Voter
-----      -------        -----       -----
-vault1    vault1:8201    leader      true
-vault3    vault3:8201    follower    true
+    $ vault operator raft list-peers
+    Node      Address        State       Voter
+    ----      -------        -----       -----
+    vault1    vault1:8201    leader      true
+    vault3    vault3:8201    follower    true
 
 Doing the same thing on vault2 yields similar results.
 
