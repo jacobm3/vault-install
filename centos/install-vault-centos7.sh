@@ -21,7 +21,7 @@ if [ ! -f "$CERTS_FILE" ]; then
     exit 1
 fi
 
-# Disable Vault TLS verification, since we're using self-signed certs
+# Disable Vault TLS verification, unless update-ca-trust magically works for you
 grep 'VAULT_SKIP_VERIFY=true' ~/.bashrc &>/dev/null || echo 'export VAULT_SKIP_VERIFY=true' >> ~/.bashrc
 
 # Install prerequisites
