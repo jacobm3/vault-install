@@ -154,12 +154,6 @@ LimitMEMLOCK=infinity
 WantedBy=multi-user.target
 EOF
 
-echo "Installing certificates"
-cd /etc/vault.d/tls && tar zxvf $CERTS_FILE
-cp ca.crt /etc/pki/ca-trust/source/anchors/
-update-ca-trust
-
-
 # Enable Vault
 systemctl enable vault
 systemctl start vault
