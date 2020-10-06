@@ -67,14 +67,13 @@ fi
 
 # Setup Vault server config 
 mkdir --parents /etc/vault.d/tls
+tar -C /etc/vault.d/tls -zxvf $CERTS_FILE
 touch /etc/vault.d/vault.hcl
 chown --recursive vault:vault /etc/vault.d
 chmod 640 /etc/vault.d/vault.hcl
+chmod 750 /etc/vault.d /etc/vault.d/tls
 
 IPADDR=`ifconfig eth0 | grep 'inet ' | awk '{print $2}'`
-
-chown --recursive vault:vault /etc/vault.d
-chmod 640 /etc/vault.d/*
 
 # Setup raft data directory
 DATA=/var/vault/data
