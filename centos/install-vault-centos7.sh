@@ -66,7 +66,7 @@ then
 fi
 
 # Setup Vault server config 
-mkdir --parents /etc/vault.d
+mkdir --parents /etc/vault.d/tls
 touch /etc/vault.d/vault.hcl
 chown --recursive vault:vault /etc/vault.d
 chmod 640 /etc/vault.d/vault.hcl
