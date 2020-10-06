@@ -1,6 +1,6 @@
 # Base Vault Install on Each Node
 
-Copy the certificate/key tarball provided by your Hashicorp engineer to `~centos/certs.tgz` on each Vault server node.
+Copy the certificate/key tarball provided by your Hashicorp engineer to `~centos/certs.tgz` on each Vault server node. This can be generated with easy-rsa and the included `gen-vault-certs.sh` script.
 
     # tar ztf ~centos/certs.tgz
     ca.crt
