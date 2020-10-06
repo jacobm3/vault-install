@@ -15,8 +15,9 @@ These commands will download and execute the install script, which will do a yum
     sudo ./vault-install/centos/install-vault-centos7.sh `hostname`
 
 
-  
-  
+&nbsp;  
+&nbsp;  
+
 # First Node Setup
 
 ## Initialize the First Vault Node
@@ -129,8 +130,9 @@ if this happens before you have an opportunity to enter it again.
     vault1    vault1:8201    leader    true
 
 
-  
-    
+&nbsp;  
+&nbsp;  
+
 # Setup Remaining Nodes
 
 ## Update vault.hcl with leader info
