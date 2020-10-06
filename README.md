@@ -47,7 +47,8 @@ https://www.vaultproject.io/docs/commands/operator/init
 
 ## Each Vault admin decrypts their unseal key
 
-    # Save unseal key output to unseal.enc on the machine where you have your PGP key (run this command, paste the value, then hit enter, ctrl-d)
+    # Save unseal key output to unseal.enc on the machine where you have your PGP key 
+    # (run this command, paste the value, then hit enter, ctrl-d)
     cat > unseal.enc
 
     # Convert to a binary file
