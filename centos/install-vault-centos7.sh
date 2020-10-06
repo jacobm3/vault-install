@@ -22,7 +22,7 @@ if [ ! -f "$CERTS_FILE" ]; then
 fi
 
 # Disable Vault TLS verification, since we're using self-signed certs
-#grep 'VAULT_SKIP_VERIFY=true' ~/.bashrc &>/dev/null || echo 'export VAULT_SKIP_VERIFY=true' >> ~/.bashrc
+grep 'VAULT_SKIP_VERIFY=true' ~/.bashrc &>/dev/null || echo 'export VAULT_SKIP_VERIFY=true' >> ~/.bashrc
 
 # Install prerequisites
 echo "Updating system packages"
