@@ -28,3 +28,6 @@ openssl req -out vault.req -newkey rsa:2048 -nodes -keyout vault.key -config csr
 
 echo "Request Details:"
 openssl req -noout -text -in vault.req
+
+# Bug in easyrsa requires you to specify SANs on CLI, won't honor from CSR
+# easyrsa --subject-alt-name=DNS.1:vault1.test.io,DNS.2:vault2.test.io,DNS.3:vault3.test.io sign-req server vault
