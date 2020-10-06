@@ -34,7 +34,7 @@ openssl req -noout -text -in vault.req
 
 ./easyrsa import-req vault.req vault
 
-./easyrsa --subject-alt-name=DNS.1:vault1.test.io,DNS.2:vault2.test.io,DNS.3:vault3.test.io sign-req server vault
+./easyrsa --subject-alt-name=DNS.1:vault1.${DOMAIN},DNS.2:vault2.${DOMAIN},DNS.3:vault3.${DOMAIN} sign-req server vault
 
 openssl x509 -in /home/jacob/CA/pki/issued/vault.crt -text
 
