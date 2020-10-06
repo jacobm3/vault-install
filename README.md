@@ -22,7 +22,7 @@ Here I'm initializing with 1 recovery key and encrypting the recovery key with m
 
 
     $ vault operator init -key-shares=1 -key-threshold=1 -pgp-keys=jacob.asc
-    Unseal Key 1: wcDMA9FTNzae4vyUAQwAiBSHW/AUPnmfP/plFgUsZfNT3oXKrIc1Z7WI1n1pNX+qfpsQ/wTMWG87v50MBOV1P6N95gK+MHO4ZGWsrQSlB5bVdiqiAcBx2g6n3iIJiUF+ZWCGXd0XagSZ8kgEeF8blWG7emZVEFfl6+pd9ClrX9dUw/yyTLjZ4VBmVlkYPGqTB8ne5Gjxx8aJbAvdhJZttvtuvg+FbBhE1V++m04iMK0TQcjTl8s+jLR/23CmfJYR0m3q8SvNkNpzQ4GYpbU
+    Unseal Key 1: wcDMA9FTNzae4vyUA...</snip> iAcBx2g6n3iIJiUF+ZWCGXd0XagSZ8kgEeF
 
     Initial Root Token: s.PCrv6L7che3Yg7ruBpxltZCc
 
@@ -107,7 +107,10 @@ https://www.vaultproject.io/docs/commands/operator/init
     Key                          Value
     ---                          -----
     expiration_time              2021-10-01T23:59:59.999Z
-    features                     [HSM Performance Replication DR Replication MFA Sentinel Seal Wrapping Control Groups Performance Standby Namespaces KMIP Entropy Augmentation Transform Secrets Engine Lease Count Quotas]
+    features                     [HSM Performance Replication DR Replication MFA Sentinel 
+                                  Seal Wrapping Control Groups Performance Standby Namespaces 
+                                  KMIP Entropy Augmentation Transform Secrets Engine 
+                                  Lease Count Quotas]
     license_id                   00693ae5-7278-408f-84a1-0f86d87476ba
     performance_standby_count    9999
     start_time                   2020-10-01T00:00:00Z
