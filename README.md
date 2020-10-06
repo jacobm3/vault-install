@@ -83,6 +83,9 @@ https://www.vaultproject.io/docs/commands/operator/init
 
 ## Login and Apply Enterprise License
 
+Vault Enterprise will seal itself after 30 minutes without a license. You must restart the Vault process 
+if this happens before you have an opportunity to enter it again.
+
     $ vault login
     Token (will be hidden): <provide root token>
     Success! You are now authenticated. The token information displayed below
