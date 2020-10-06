@@ -88,13 +88,13 @@ storage "raft" {
     path    = "${DATA}"
     node_id = "${NODENAME}"
     # retry_join {
-    #     leader_api_addr = "https://XXXX.test.io:8200"
+    #     leader_api_addr = "https://OTHERNODE.test.io:8200"
     #     leader_ca_cert_file = "/etc/vault.d/tls/ca.crt"
     #     leader_client_cert_file = "/etc/vault.d/tls/vault.crt"
     #     leader_client_key_file = "/etc/vault.d/tls/vault.key"
     # }
     # retry_join {
-    #     leader_api_addr = "https://YYYY.test.io:8200"
+    #     leader_api_addr = "https://OTHEROTHERNODE.test.io:8200"
     #     leader_ca_cert_file = "/etc/vault.d/tls/ca.crt"
     #     leader_client_cert_file = "/etc/vault.d/tls/vault.crt"
     #     leader_client_key_file = "/etc/vault.d/tls/vault.key"
