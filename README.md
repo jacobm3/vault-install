@@ -40,7 +40,9 @@ Here I'm initializing with 1 recovery key and encrypting the recovery key with m
 Save the encrypted unseal key and the root token somewhere safe.
 
 For more information on `operator init` options, see:
+
 https://learn.hashicorp.com/tutorials/vault/getting-started-deploy#initializing-the-vault
+
 https://www.vaultproject.io/docs/commands/operator/init
 
 ## Each Vault admin decrypts their unseal key
@@ -54,7 +56,7 @@ https://www.vaultproject.io/docs/commands/operator/init
     # Decrypt with pgp/gpg
     $ gpg -d unseal.bin
     gpg: encrypted with 3072-bit RSA key, ID D15337369EE2FC94, created 2020-10-03
-      "Jacob Martinson <jacob7719@gmail.com>"
+      "Jacob Martinson <jacob@gmail.com>"
     9cb8ee50c4fe90b4e905b9be404c3384d4afa25377e1be25dfff0f5fed9c947e
 
 ## Unseal the first node
