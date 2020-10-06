@@ -214,6 +214,7 @@ EOF
 
 openssl req -out vault.req -newkey rsa:2048 -nodes -keyout vault.key -config csr.cnf
 
+# easyrsa --subject-alt-name=DNS.1:vault1.test.io,DNS.2:vault2.test.io,DNS.3:vault3.test.io sign-req server vault
 
 mkdir -p /etc/vault.d/tls
 cp ${NODENAME}.key /etc/vault.d/tls
