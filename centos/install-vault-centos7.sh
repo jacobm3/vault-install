@@ -1,9 +1,6 @@
 #!/bin/bash 
 
-# Installs Vault node with self-signed certificate and 
-# enables VAULT_SKIP_VERIFY in shell
-
-set -x
+# Installs Vault node for participation in raft cluster
 
 if [ -z "$1" ]
   then
@@ -17,11 +14,19 @@ if [ $EUID -ne 0 ]; then
     exit 1
 fi
 
+
+CERTS_FILE=vault-certs.tgz
+if [ ! -f "$CERTS_FILE" ]; then
+    echo "Certificate tarball not found! $CERTS_FILE"
+    exit 1
+fi
+
 # Disable Vault TLS verification, since we're using self-signed certs
-grep 'VAULT_SKIP_VERIFY=true' ~/.bashrc &>/dev/null || echo 'export VAULT_SKIP_VERIFY=true' >> ~/.bashrc
+#grep 'VAULT_SKIP_VERIFY=true' ~/.bashrc &>/dev/null || echo 'export VAULT_SKIP_VERIFY=true' >> ~/.bashrc
 
 # Install prerequisites
-yum update -y
+echo "Updating system packages"
+yum update
 for cmd in unzip vim openssl tree curl; do
 if ! command -v $cmd &> /dev/null
 then
@@ -32,6 +37,7 @@ done
 export PATH=${PATH}:/usr/local/bin
 
 # Install latest Vault version if needed
+echo "Checking latest Vault version"
 tmpout=.vault.version.check.$$
 curl -s -o $tmpout https://www.vaultproject.io/downloads
 VAULT_VERSION=`egrep -o '"version":".\..\.."'  $tmpout | head -1  | cut -f4 -d'"'`
@@ -39,6 +45,7 @@ rm $tmpout
 
 # Put binary in place
 # https://releases.hashicorp.com/vault/1.5.4+ent/vault_1.5.4+ent_linux_amd64.zip
+echo "Downloading Vault https://releases.hashicorp.com/vault/${VAULT_VERSION}+ent/vault_${VAULT_VERSION}+ent_linux_amd64.zip"
 curl --silent  --remote-name -o vault_${VAULT_VERSION}_linux_amd64.zip "https://releases.hashicorp.com/vault/${VAULT_VERSION}+ent/vault_${VAULT_VERSION}+ent_linux_amd64.zip"
 unzip vault_${VAULT_VERSION}+ent_linux_amd64.zip
 chown root:root vault
@@ -66,46 +73,6 @@ chmod 640 /etc/vault.d/vault.hcl
 
 IPADDR=`ifconfig eth0 | grep 'inet ' | awk '{print $2}'`
 
-# # Generate Vault's client-facing key & certificate
-# SSLCONF=.ssl-req.conf
-# cat > $SSLCONF <<EOF
-# [req]
-# distinguished_name = req_distinguished_name
-# x509_extensions = v3_req
-# prompt = no
-# [req_distinguished_name]
-# C = US
-# ST = Texas
-# L = Houston
-# O = Hashicorp
-# OU = Engineering
-# CN = *
-# [v3_req]
-# extendedKeyUsage = serverAuth
-# subjectAltName = @alt_names
-# [alt_names]
-# DNS.1 = *
-# DNS.2 = *.*
-# DNS.3 = *.*.*
-# DNS.4 = *.*.*.*
-# DNS.5 = *.*.*.*.*
-# DNS.6 = *.*.*.*.*.*
-# DNS.7 = *.*.*.*.*.*.*
-# IP.1 = $IPADDR
-# IP.2 = 127.0.0.1
-# EOF
-
-# openssl req -days 730 -x509 -nodes -newkey rsa:2048 \
-#   -keyout  vault-key.${NODENAME}.pem \
-#   -out vault-cert.${NODENAME}.pem \
-#   -config $SSLCONF -extensions 'v3_req'
-
-#cp vault-cert.${NODENAME}.pem /etc/pki/ca-trust/source/anchors
-#update-ca-trust extract
-#cat vault-cert.vault1.pem >> /etc/pki/tls/certs/ca-bundle.crt
-
-# cp vault-cert.${NODENAME}.pem vault-key.${NODENAME}.pem /etc/vault.d
-
 chown --recursive vault:vault /etc/vault.d
 chmod 640 /etc/vault.d/*
 
@@ -115,8 +82,8 @@ mkdir -p $DATA
 chown -R vault:vault $DATA
 chmod -R 750 $DATA
 
-
 # Setup server config 
+echo "Creating /etc/vault.d/vault.hcl"
 cat > /etc/vault.d/vault.hcl <<EOF
 storage "raft" {
     path    = "${DATA}"
@@ -149,7 +116,7 @@ api_addr = "https://${NODENAME}:8200"
 ui = true
 EOF
 
-# TODO add systemd service file
+echo "Enabling vault.service in systemd"
 # https://learn.hashicorp.com/tutorials/vault/raft-deployment-guide#configure-systemd
 cat > /etc/systemd/system/vault.service <<EOF
 [Unit]
@@ -187,45 +154,16 @@ LimitMEMLOCK=infinity
 WantedBy=multi-user.target
 EOF
 
-# Generate TLS key and cert signing request
-cat >csr.cnf <<EOF
-[req]
-distinguished_name = req_distinguished_name
-req_extensions = v3_req
-prompt = no
-[req_distinguished_name]
-C = US
-ST = TX
-L = Houston
-O = Hashicorp POC
-OU = Solution Engineering
-CN = vault
-[v3_req]
-keyUsage = keyEncipherment, dataEncipherment
-extendedKeyUsage = serverAuth
-subjectAltName = @alt_names
-[alt_names]
-DNS.1 = vault1.test.io
-DNS.2 = vault2.test.io
-DNS.3 = vault3.test.io
-DNS.4 = localhost
-IP.1 = 127.0.0.1
-EOF
-
-openssl req -out vault.req -newkey rsa:2048 -nodes -keyout vault.key -config csr.cnf
-
-
-mkdir -p /etc/vault.d/tls
-cp ${NODENAME}.key /etc/vault.d/tls
-
-echo "ATTENTION: A CSR has been created in vault.req.  Please have this signed and"
-echo "           place the resulting certificate in /etc/vault.d/tls/vault.crt."
+echo "Installing certificates"
+cd /etc/vault.d/tls && tar zxvf $CERTS_FILE
+cp ca.crt /etc/pki/ca-trust/source/anchors/
+update-ca-trust
 
 
 # Enable Vault
-# systemctl enable vault
-#systemctl start vault
-#systemctl status vault
+systemctl enable vault
+systemctl start vault
+systemctl status vault
 
 
 
