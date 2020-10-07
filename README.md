@@ -37,7 +37,7 @@ https://www.vaultproject.io/docs/commands/operator/init
 
 https://www.vaultproject.io/docs/concepts/seal
 
-### Initializing with default 5 cleartext unseal keys
+### Option 1 - Initializing with default 5 cleartext unseal keys
 
     $ vault operator init
     Unseal Key 1: jMIjMawbpKcJN1TVKCfd6/G6hiC/q+0FJkz5U7cx0jXs
@@ -59,7 +59,7 @@ https://www.vaultproject.io/docs/concepts/seal
     It is possible to generate new unseal keys, provided you have a quorum of
     existing unseal keys shares. See "vault operator rekey" for more information.
 
-### Initializing with PGP unseal keys
+### Option 2 - Initializing with PGP unseal keys
 
 Here I'm initializing with 1 recovery key and encrypting the recovery key with my PGP public key for safe delivery. PGP keys should be used to securely distribute key shards to Vault admins when using Shamir secret sharing to provide separation of duties. 
 
@@ -80,7 +80,7 @@ Here I'm initializing with 1 recovery key and encrypting the recovery key with m
     It is possible to generate new unseal keys, provided you have a quorum of
     existing unseal keys shares. See "vault operator rekey" for more information.
 
-### Decrypting Unseal Keys
+### Decrypting PGP Unseal Keys
 
 PGP or GPG use varies by operating system. These instructions work in Linux/WSL:
 
