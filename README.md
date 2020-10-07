@@ -39,6 +39,8 @@ https://www.vaultproject.io/docs/concepts/seal
 
 ### Option 1 - Initializing with default 5 cleartext unseal keys
 
+This is the default behavior, generating 5 unseal keys and requiring a quorum of 3 users to provide their unseal keys in order to perform sensitive operations like unsealing a Vault or generating a root token.
+
     $ vault operator init
     Unseal Key 1: jMIjMawbpKcJN1TVKCfd6/G6hiC/q+0FJkz5U7cx0jXs
     Unseal Key 2: FvABLzddGvWND9HiwhwtNbistudY4Wqfo78lOUxLR8Lg
