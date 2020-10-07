@@ -1,4 +1,4 @@
-This repository can be used to quickly and easily setup a Vault cluster with raft integrated storage. It assumes you're generating a signed TLS key/certificate pair for the nodes to use.
+This repository can be used to quickly and easily setup a Vault cluster with raft integrated storage. It assumes you already have 3 VMs running, sudo access on each of them, and that you've generated a signed TLS key/certificate pair for the nodes to use. The `gen-vault-certs.sh` script can be used to in conjunction with `easy-rsa` to easily generate a CA and signed certs.
 
 # Base Vault Install on Each Node
 
