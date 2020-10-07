@@ -23,6 +23,44 @@ These commands will download and execute the install script, which will do a yum
 
 ## Initialize the First Vault Node
 
+Initialization is the process of configuring Vault. This only happens once when the server is started against a new backend that has never been used with Vault before. When running in HA mode, this happens once per cluster, not per server.
+
+During initialization, the encryption keys are generated, unseal keys are created, and the initial root token is setup. To initialize Vault use vault operator init. This is an unauthenticated request, but it only works on brand new Vaults with no data. The unseal key(s) and root token are a core part of Vault's security model and should be guarded closely. 
+
+Decisions around the unseal process include whether to use Shamir unseal keys, auto-unseal with a cloud key management system, and whether to use PGP to securely deliver unseal keys to their intended recipients.
+
+For more information see:
+
+https://learn.hashicorp.com/tutorials/vault/getting-started-deploy#initializing-the-vault
+
+https://www.vaultproject.io/docs/commands/operator/init
+
+https://www.vaultproject.io/docs/concepts/seal
+
+### Initializing with default 5 cleartext unseal keys
+
+    $ vault operator init
+    Unseal Key 1: jMIjMawbpKcJN1TVKCfd6/G6hiC/q+0FJkz5U7cx0jXs
+    Unseal Key 2: FvABLzddGvWND9HiwhwtNbistudY4Wqfo78lOUxLR8Lg
+    Unseal Key 3: yCZJ4XD77D800SeM80BYbcjXwP3dOuooU7ykcO1Awk6T
+    Unseal Key 4: jHyIHaWSvm8ok366vtwXDZ5emVpiWGSh+MBFK4dZ1kfA
+    Unseal Key 5: Vc/qDmtPBwkNnoau70+k/qGl5aqULpmz6Ye1xZGMS+EM
+
+    Initial Root Token: s.QlSgkzZgXb3qBF27xxMego6B
+
+    Vault initialized with 5 key shares and a key threshold of 3. Please securely
+    distribute the key shares printed above. When the Vault is re-sealed,
+    restarted, or stopped, you must supply at least 3 of these keys to unseal it
+    before it can start servicing requests.
+
+    Vault does not store the generated master key. Without at least 3 key to
+    reconstruct the master key, Vault will remain permanently sealed!
+
+    It is possible to generate new unseal keys, provided you have a quorum of
+    existing unseal keys shares. See "vault operator rekey" for more information.
+
+### Initializing with PGP unseal keys
+
 Here I'm initializing with 1 recovery key and encrypting the recovery key with my PGP public key for safe delivery. PGP keys should be used to securely distribute key shards to Vault admins when using Shamir secret sharing to provide separation of duties. 
 
 
@@ -42,15 +80,9 @@ Here I'm initializing with 1 recovery key and encrypting the recovery key with m
     It is possible to generate new unseal keys, provided you have a quorum of
     existing unseal keys shares. See "vault operator rekey" for more information.
 
-Save the encrypted unseal key and the root token somewhere safe.
+### Decrypting Unseal Keys
 
-For more information on `operator init` options, see:
-
-https://learn.hashicorp.com/tutorials/vault/getting-started-deploy#initializing-the-vault
-
-https://www.vaultproject.io/docs/commands/operator/init
-
-## Each Vault Admin Decrypts their Unseal Key
+PGP or GPG use varies by operating system. These instructions work in Linux/WSL:
 
     # Save unseal key output to unseal.enc on the machine where you have your PGP key 
     # (run this command, paste the value, then hit enter, ctrl-d)
@@ -65,7 +97,10 @@ https://www.vaultproject.io/docs/commands/operator/init
       "Jacob Martinson <jacob@gmail.com>"
     9cb8ee50c4fe90b4e905b9be404c3384d4afa25377e1be25dfff0f5fed9c947e
 
+
 ## Unseal the First Node
+
+When a Vault server is started, it starts in a sealed state. In this state, Vault is configured to know where and how to access the physical storage, but doesn't know how to decrypt any of it. Unsealing is the process of obtaining the plaintext master key necessary to read the decryption key to decrypt the data, allowing access to the Vault.
 
     $ vault operator unseal
     Unseal Key (will be hidden): <provide decrypted key here>
