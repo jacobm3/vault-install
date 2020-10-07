@@ -61,7 +61,28 @@ https://www.vaultproject.io/docs/concepts/seal
     It is possible to generate new unseal keys, provided you have a quorum of
     existing unseal keys shares. See "vault operator rekey" for more information.
 
-### Option 2 - Initializing with PGP unseal keys
+### Option 2 - Initializing with a single cleartext unseal key
+
+This is often done for small development and testing environments that need persistence than Vault's dev mode provides. 
+
+    $ vault operator init -key-shares=1 -key-threshold=1
+    Unseal Key 1: nP4Odrb6EuFgVsA/Q+YIcMHV3JwIPj8e8Wb64S6SPVE=
+
+    Initial Root Token: s.aOJbmwLXoFR4JoEEMoaOCSMZ
+
+    Vault initialized with 1 key shares and a key threshold of 1. Please securely
+    distribute the key shares printed above. When the Vault is re-sealed,
+    restarted, or stopped, you must supply at least 1 of these keys to unseal it
+    before it can start servicing requests.
+
+    Vault does not store the generated master key. Without at least 1 key to
+    reconstruct the master key, Vault will remain permanently sealed!
+
+    It is possible to generate new unseal keys, provided you have a quorum of
+    existing unseal keys shares. See "vault operator rekey" for more information.
+
+
+### Option 3 - Initializing with PGP unseal keys
 
 Here I'm initializing with 1 recovery key and encrypting the recovery key with my PGP public key for safe delivery. PGP keys should be used to securely distribute key shards to Vault admins when using Shamir secret sharing to provide separation of duties. 
 
