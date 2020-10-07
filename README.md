@@ -1,3 +1,5 @@
+This repository can be used to quickly and easily setup a Vault cluster with raft integrated storage. It assumes you're generating a signed TLS key/certificate pair for the nodes to use.
+
 # Base Vault Install on Each Node
 
 Copy the certificate/key tarball provided by your Hashicorp engineer to `~centos/certs.tgz` on each Vault server node. This can be generated with easy-rsa and the included `gen-vault-certs.sh` script. This will be used by the Vault listener and when nodes join the cluster.
@@ -173,70 +175,70 @@ if this happens before you have an opportunity to enter it again.
 
 ## Join Nodes to the Cluster
 
-$ vault operator raft join \
-      -leader-ca-cert=@tls/ca.crt \
-      -leader-client-cert=@tls/vault.crt \
-      -leader-client-key=@tls/vault.key \
-	  https://vault1.test.io:8200
+    $ vault operator raft join \
+        -leader-ca-cert=@tls/ca.crt \
+        -leader-client-cert=@tls/vault.crt \
+        -leader-client-key=@tls/vault.key \
+        https://vault1.test.io:8200
 
-Key       Value
----       -----
-Joined    true
+    Key       Value
+    ---       -----
+    Joined    true
 
-$ vault operator unseal
-Unseal Key (will be hidden):
-Key                Value
----                -----
-Seal Type          shamir
-Initialized        true
-Sealed             true
-Total Shares       1
-Threshold          1
-Unseal Progress    0/1
-Unseal Nonce       n/a
-Version            1.5.4+ent
-HA Enabled         true
+    $ vault operator unseal
+    Unseal Key (will be hidden):
+    Key                Value
+    ---                -----
+    Seal Type          shamir
+    Initialized        true
+    Sealed             true
+    Total Shares       1
+    Threshold          1
+    Unseal Progress    0/1
+    Unseal Nonce       n/a
+    Version            1.5.4+ent
+    HA Enabled         true
 
-$ vault status
-Key                     Value
----                     -----
-Seal Type               shamir
-Initialized             true
-Sealed                  false
-Total Shares            1
-Threshold               1
-Version                 1.5.4+ent
-Cluster Name            vault-cluster-567fb529
-Cluster ID              dfb2004a-7826-af15-ac79-d5b0c70294fd
-HA Enabled              true
-HA Cluster              https://vault1:8201
-HA Mode                 standby
-Active Node Address     https://vault1:8200
-Raft Committed Index    1490
-Raft Applied Index      1490
+    $ vault status
+    Key                     Value
+    ---                     -----
+    Seal Type               shamir
+    Initialized             true
+    Sealed                  false
+    Total Shares            1
+    Threshold               1
+    Version                 1.5.4+ent
+    Cluster Name            vault-cluster-567fb529
+    Cluster ID              dfb2004a-7826-af15-ac79-d5b0c70294fd
+    HA Enabled              true
+    HA Cluster              https://vault1:8201
+    HA Mode                 standby
+    Active Node Address     https://vault1:8200
+    Raft Committed Index    1490
+    Raft Applied Index      1490
 
-$ vault login
-Token (will be hidden):
-Success! You are now authenticated. The token information displayed below
-is already stored in the token helper. You do NOT need to run "vault login"
-again. Future Vault requests will automatically use this token.
+    $ vault login
+    Token (will be hidden):
+    Success! You are now authenticated. The token information displayed below
+    is already stored in the token helper. You do NOT need to run "vault login"
+    again. Future Vault requests will automatically use this token.
 
-Key                  Value
----                  -----
-token                s.xxxxxxxxxxxxxxxxxxxxxxxx
-token_accessor       kwFXtip8xr8yE6MESTbY3Dym
-token_duration       ∞
-token_renewable      false
-token_policies       ["root"]
-identity_policies    []
-policies             ["root"]
+    Key                  Value
+    ---                  -----
+    token                s.xxxxxxxxxxxxxxxxxxxxxxxx
+    token_accessor       kwFXtip8xr8yE6MESTbY3Dym
+    token_duration       ∞
+    token_renewable      false
+    token_policies       ["root"]
+    identity_policies    []
+    policies             ["root"]
 
-$ vault operator raft list-peers
-Node      Address        State       Voter
-----      -------        -----       -----
-vault1    vault1:8201    leader      true
-vault2    vault2:8201    follower    true
-vault3    vault3:8201    follower    true
+    $ vault operator raft list-peers
+    Node      Address        State       Voter
+    ----      -------        -----       -----
+    vault1    vault1:8201    leader      true
+    vault2    vault2:8201    follower    true
+    vault3    vault3:8201    follower    true
 
 &nbsp;  
 &nbsp;  
@@ -244,3 +246,5 @@ vault3    vault3:8201    follower    true
 # Congratulations!
 
 Your Vault cluster is now operational!
+
+
