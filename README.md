@@ -190,7 +190,7 @@ First node is the only node in cluster
     ----      -------        -----     -----
     vault1    vault1:8201    leader    true
 
-## Write First Secret to Single Node Cluster
+## Write First Secret
 
     $ vault secrets enable -version=2 kv
     Success! Enabled the kv secrets engine at: kv/
@@ -220,7 +220,11 @@ First node is the only node in cluster
 
 &nbsp;  
 
-# Join Remaining Nodes to the Cluster
+# Setup Remaining Nodes
+
+Run these commands on each additional node you wish to join to the cluster. 
+
+## Join to Cluster
 
     $ vault operator raft join \
         -leader-ca-cert=@tls/ca.crt \
@@ -245,6 +249,8 @@ First node is the only node in cluster
     Unseal Nonce       n/a
     Version            1.5.4+ent
     HA Enabled         true
+
+## View Status
 
     $ vault status
     Key                     Value
@@ -287,9 +293,7 @@ First node is the only node in cluster
     vault2    vault2:8201    follower    true
     vault3    vault3:8201    follower    true
 
-# Verify Data Replicated Across Cluster
-
-From the second or third node, run:
+## Verify Data Replicated Across Cluster
 
     $ vault kv get kv/my-secret
     ====== Metadata ======
