@@ -86,6 +86,8 @@ This is often done for small development and testing environments that need pers
 
 Here I'm initializing with 1 recovery key and encrypting the recovery key with my PGP public key for safe delivery. PGP keys should be used to securely distribute key shards to Vault admins when using Shamir secret sharing to provide separation of duties. 
 
+For more information on using Vault and PGP together, please see:
+https://www.vaultproject.io/docs/concepts/pgp-gpg-keybase
 
     $ vault operator init -key-shares=1 -key-threshold=1 -pgp-keys=jacob.asc
     Unseal Key 1: wcDMA9FTNzae4vyUA...</snip> iAcBx2g6n3iIJiUF+ZWCGXd0XagSZ8kgEeF
