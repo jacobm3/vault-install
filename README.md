@@ -190,11 +190,37 @@ First node is the only node in cluster
     ----      -------        -----     -----
     vault1    vault1:8201    leader    true
 
+## Write First Secret to Single Node Cluster
+
+    $ vault secrets enable -version=2 kv
+    Success! Enabled the kv secrets engine at: kv/
+
+    $ vault kv put kv/my-secret my-value=s3cr3t
+    Key              Value
+    ---              -----
+    created_time     2020-10-07T15:56:51.997241719Z
+    deletion_time    n/a
+    destroyed        false
+    version          1
+
+    $ vault kv get kv/my-secret
+    ====== Metadata ======
+    Key              Value
+    ---              -----
+    created_time     2020-10-07T15:56:51.997241719Z
+    deletion_time    n/a
+    destroyed        false
+    version          1
+
+    ====== Data ======
+    Key         Value
+    ---         -----
+    my-value    s3cr3t
+
+
 &nbsp;  
 
-# Setup Remaining Nodes
-
-## Join Nodes to the Cluster
+# Join Remaining Nodes to the Cluster
 
     $ vault operator raft join \
         -leader-ca-cert=@tls/ca.crt \
@@ -260,6 +286,24 @@ First node is the only node in cluster
     vault1    vault1:8201    leader      true
     vault2    vault2:8201    follower    true
     vault3    vault3:8201    follower    true
+
+# Verify Data Replicated Across Cluster
+
+From the second or third node, run:
+
+    $ vault kv get kv/my-secret
+    ====== Metadata ======
+    Key              Value
+    ---              -----
+    created_time     2020-10-07T15:56:51.997241719Z
+    deletion_time    n/a
+    destroyed        false
+    version          1
+
+    ====== Data ======
+    Key         Value
+    ---         -----
+    my-value    s3cr3t
 
 &nbsp;  
 
