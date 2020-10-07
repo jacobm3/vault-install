@@ -21,7 +21,7 @@ if [ ! -f "$CERTS_FILE" ]; then
     exit 1
 fi
 
-# Disable Vault TLS verification, unless update-ca-trust magically works for you
+# Disable Vault TLS verification, unless the centos update-ca-trust magically works for you
 grep 'VAULT_SKIP_VERIFY=true' ~/.bashrc &>/dev/null || echo 'export VAULT_SKIP_VERIFY=true' >> ~/.bashrc
 
 # Install prerequisites
@@ -66,8 +66,8 @@ then
 fi
 
 # Setup Vault server config 
-mkdir --parents /etc/vault.d/tls
-tar -C /etc/vault.d/tls -zxvf $CERTS_FILE
+mkdir --parents -m 700 /etc/vault.d/tls
+tar -C /etc/vault.d -zxvf $CERTS_FILE
 touch /etc/vault.d/vault.hcl
 chown --recursive vault:vault /etc/vault.d
 chmod 640 /etc/vault.d/vault.hcl
@@ -87,19 +87,6 @@ cat > /etc/vault.d/vault.hcl <<EOF
 storage "raft" {
     path    = "${DATA}"
     node_id = "${NODENAME}"
-    # retry_join {
-    #     leader_api_addr = "https://OTHERNODE.test.io:8200"
-    #     leader_ca_cert_file = "/etc/vault.d/tls/ca.crt"
-    #     leader_client_cert_file = "/etc/vault.d/tls/vault.crt"
-    #     leader_client_key_file = "/etc/vault.d/tls/vault.key"
-    # }
-    # retry_join {
-    #     leader_api_addr = "https://OTHEROTHERNODE.test.io:8200"
-    #     leader_ca_cert_file = "/etc/vault.d/tls/ca.crt"
-    #     leader_client_cert_file = "/etc/vault.d/tls/vault.crt"
-    #     leader_client_key_file = "/etc/vault.d/tls/vault.key"
-    # }
-
 }
 
 listener "tcp" {

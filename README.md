@@ -1,11 +1,12 @@
 # Base Vault Install on Each Node
 
-Copy the certificate/key tarball provided by your Hashicorp engineer to `~centos/certs.tgz` on each Vault server node. This can be generated with easy-rsa and the included `gen-vault-certs.sh` script.
+Copy the certificate/key tarball provided by your Hashicorp engineer to `~centos/certs.tgz` on each Vault server node. This can be generated with easy-rsa and the included `gen-vault-certs.sh` script. This will be used by the Vault listener and when nodes join the cluster.
 
-    # tar ztf ~centos/certs.tgz
-    ca.crt
-    vault.crt
-    vault.key
+    $ cd ~centos
+    $ tar zxvf certs.tgz
+    tls/ca.crt
+    tls/vault.crt
+    tls/vault.key
 
 
 These commands will download and execute the install script, which will do a yum update, install dependencies, install Vault with raft integrated storage and a self-signed certificate. Do this on each Vault server node.

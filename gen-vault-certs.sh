@@ -38,9 +38,10 @@ openssl req -noout -text -in vault.req
 
 openssl x509 -in /home/jacob/CA/pki/issued/vault.crt -text
 
-cp pki/ca.crt .
-cp pki/issued/vault.crt .
-tar zcf certs.tgz ca.crt vault.crt vault.key
+dir=tls
+mkdir -m 750 $dir
+cp vault.key pki/ca.crt pki/issued/vault.crt $dir
+tar zcf certs.tgz $dir
 
 echo 
 echo "Certificates and key: certs.tgz"
