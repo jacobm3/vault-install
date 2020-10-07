@@ -105,7 +105,7 @@ https://www.vaultproject.io/docs/concepts/pgp-gpg-keybase
     It is possible to generate new unseal keys, provided you have a quorum of
     existing unseal keys shares. See "vault operator rekey" for more information.
 
-### Decrypting PGP Unseal Keys
+#### Decrypting PGP Unseal Keys
 
 PGP or GPG use varies by operating system. These instructions work in Linux/WSL:
 
