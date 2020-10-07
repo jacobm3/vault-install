@@ -182,7 +182,8 @@ if this happens before you have an opportunity to enter it again.
     performance_standby_count    9999
     start_time                   2020-10-01T00:00:00Z
 
-## First node is the only node in cluster
+## View Peer List
+First node is the only node in cluster
 
     $ vault operator raft list-peers
     Node      Address        State     Voter
