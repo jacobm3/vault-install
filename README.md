@@ -99,6 +99,7 @@ PGP or GPG use varies by operating system. These instructions work in Linux/WSL:
       "Jacob Martinson <jacob@gmail.com>"
     9cb8ee50c4fe90b4e905b9be404c3384d4afa25377e1be25dfff0f5fed9c947e
 
+In this case, the unseal key for this user is `9cb8ee50c4fe90b4e905b9be404c3384d4afa25377e1be25dfff0f5fed9c947e`
 
 ## Unseal the First Node
 
