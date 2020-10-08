@@ -61,7 +61,7 @@ This is the default behavior, generating 5 unseal keys and requiring a quorum of
 
 ### Option 2 - Initializing with a single cleartext unseal key
 
-This is often done for small development and testing environments with lower administrative overhead and security requirements, but that need persistence that Vault's dev mode doesn't provide. 
+This is often done for dev-test environments with lower security requirements, but that still require persistence that Vault's dev mode doesn't provide. 
 
     $ vault operator init -key-shares=1 -key-threshold=1
     Unseal Key 1: nP4Odrb6EuFgVsA/Q+YIcMHV3JwIPj8e8Wb64S6SPVE=
