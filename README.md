@@ -227,9 +227,9 @@ Run these commands on each additional node you wish to join to the cluster.
 ## Join to Cluster
 
     $ vault operator raft join \
-        -leader-ca-cert=@/etc/ssl/vault/ca.crt \
-        -leader-client-cert=@/etc/ssl/vault/vault.crt \
-        -leader-client-key=@/etc/ssl/vault/vault.key \
+        -leader-ca-cert=@ca.crt \
+        -leader-client-cert=@vault.crt \
+        -leader-client-key=@vault.key \
         https://vault1.test.io:8200
 
     Key       Value
