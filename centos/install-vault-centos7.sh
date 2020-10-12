@@ -41,6 +41,10 @@ then
 fi
 done
 
+# Install jq
+yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+yum install jq -y
+
 export PATH=${PATH}:/usr/local/bin
 
 # Install latest Vault version if needed
