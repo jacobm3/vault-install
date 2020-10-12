@@ -14,12 +14,14 @@ if [ $EUID -ne 0 ]; then
     exit 1
 fi
 
+BASEUSER=centos
 
-CERTS_FILE=~centos/certs.tgz
+CERTS_FILE=~${BASEUSER}/certs.tgz
 if [ ! -f "$CERTS_FILE" ]; then
     echo "Certificate tarball not found! $CERTS_FILE"
     exit 1
 fi
+tar -C ~${BASEUSER} $CERTS_FILE
 
 # Disable Vault TLS verification, unless the centos update-ca-trust magically works for you
 grep 'VAULT_SKIP_VERIFY=true' ~/.bashrc &>/dev/null || echo 'export VAULT_SKIP_VERIFY=true' >> ~/.bashrc
