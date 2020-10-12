@@ -2,6 +2,8 @@
 
 DOMAIN=test.io
 
+rm -f certs.tgz vault.key vault.crt pki/issued/vault.crt
+
 cat >csr.cnf <<EOF
 [req]
 distinguished_name = req_distinguished_name
@@ -31,17 +33,14 @@ openssl req -out vault.req -newkey rsa:2048 -nodes -keyout vault.key -config csr
 echo "Request Details:"
 openssl req -noout -text -in vault.req
 
-
 ./easyrsa import-req vault.req vault
 
 ./easyrsa --subject-alt-name=DNS.1:vault1.${DOMAIN},DNS.2:vault2.${DOMAIN},DNS.3:vault3.${DOMAIN} sign-req server vault
 
 openssl x509 -in /home/jacob/CA/pki/issued/vault.crt -text
 
-dir=tls
-mkdir -m 750 $dir
-cp vault.key pki/ca.crt pki/issued/vault.crt $dir
-tar zcf certs.tgz $dir
+cp pki/ca.crt pki/issued/vault.crt .
+tar zcf certs.tgz vault.key vault.crt ca.crt
 
 echo 
 echo "Certificates and key: certs.tgz"
