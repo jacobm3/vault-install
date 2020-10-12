@@ -66,12 +66,13 @@ then
 fi
 
 # Setup Vault server config 
-mkdir --parents -m 700 /etc/vault.d/tls
-tar -C /etc/vault.d -zxvf $CERTS_FILE
+mkdir --parents -m 750 /etc/vault.d /etc/ssl/vault
+tar -C /etc/ssl/vault -zxvf $CERTS_FILE
 touch /etc/vault.d/vault.hcl
-chown --recursive vault:vault /etc/vault.d
+chown --recursive vault:vault /etc/vault.d /etc/ssl/vault
 chmod 640 /etc/vault.d/vault.hcl
-chmod 750 /etc/vault.d /etc/vault.d/tls
+chmod 755 /etc/vault.d 
+chmod 750 /etc/ssl/vault
 
 IPADDR=`ifconfig eth0 | grep 'inet ' | awk '{print $2}'`
 
@@ -92,8 +93,8 @@ storage "raft" {
 listener "tcp" {
   address       = "0.0.0.0:8200"
   cluster_address = "0.0.0.0:8201"
-  tls_cert_file = "/etc/vault.d/tls/vault.crt"
-  tls_key_file  = "/etc/vault.d/tls/vault.key"
+  tls_cert_file = "/etc/ssl/vault/vault.crt"
+  tls_key_file  = "/etc/ssl/vault/vault.key"
 }
 
 cluster_addr = "https://${NODENAME}:8201"
