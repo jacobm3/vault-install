@@ -45,5 +45,11 @@ openssl x509 -in /home/jacob/CA/pki/issued/vault.crt -text
 cp pki/ca.crt pki/issued/vault.crt .
 tar zcf certs.tgz vault.key vault.crt ca.crt
 
-echo 
-echo "Certificates and key: certs.tgz"
+echo  <<EOF
+Certificates and key: certs.tgz
+
+To install the CA cert in Centos 7, cross your fingers and:
+cp ca.crt /etc/pki/ca-trust/source/anchors/vault-ca.pem && update-ca-trust
+
+EOF
+

@@ -25,6 +25,8 @@ if [ ! -f "$CERTS_FILE" ]; then
     exit 1
 fi
 tar -C /home/${BASEUSER} -xvf $CERTS_FILE
+
+# Cross your fingers
 cp /home/${BASEUSER}/ca.crt /etc/pki/ca-trust/source/anchors/vault-ca.pem
 update-ca-trust
 
