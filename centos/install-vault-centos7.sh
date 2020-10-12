@@ -68,11 +68,15 @@ fi
 # Setup Vault server config 
 mkdir --parents -m 750 /etc/vault.d /etc/ssl/vault
 tar -C /etc/ssl/vault -zxvf $CERTS_FILE
+chmod 640 /etc/ssl/vault/*
 touch /etc/vault.d/vault.hcl
 chown --recursive vault:vault /etc/vault.d /etc/ssl/vault
 chmod 640 /etc/vault.d/vault.hcl
 chmod 755 /etc/vault.d 
 chmod 750 /etc/ssl/vault
+
+# Add default centos user to vault group
+usermod -a -G vault centos
 
 IPADDR=`ifconfig eth0 | grep 'inet ' | awk '{print $2}'`
 
