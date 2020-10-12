@@ -6,9 +6,9 @@ Copy the certificate/key tarball provided by your Hashicorp engineer to `~centos
 
     $ cd ~centos
     $ tar zxvf certs.tgz
-    tls/ca.crt
-    tls/vault.crt
-    tls/vault.key
+    ca.crt
+    vault.crt
+    vault.key
 
 
 These commands will download and execute the install script, which will do a yum update, install dependencies, install Vault with raft integrated storage and a self-signed certificate. Do this on each Vault server node.
