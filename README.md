@@ -10,6 +10,12 @@ Copy the certificates/key tarball provided by your Hashicorp engineer to `~cento
     vault.crt
     vault.key
 
+Setup DNS so the Vault nodes can resolve each others names to IP addresses. If DNS isn't available, add enties to `/etc/hosts` on each node so they can all resolve each other locally instead. These hostnames are what you'll use when joining nodes to the cluster. Example:
+
+    172.31.30.139 vault1.test.io vault1
+    172.31.31.184 vault2.test.io vault2
+    172.31.17.195 vault3.test.io vault3
+
 
 These commands will download and execute the install script, which will do a yum update, install dependencies, install Vault with raft integrated storage and a self-signed certificate. Do this on each Vault server node.
 
