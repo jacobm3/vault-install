@@ -16,7 +16,7 @@ fi
 
 BASEUSER=centos
 
-CERTS_FILE=~${BASEUSER}/certs.tgz
+CERTS_FILE=/home/${BASEUSER}/certs.tgz
 if [ ! -f "$CERTS_FILE" ]; then
     echo "Certificate tarball not found! $CERTS_FILE"
     exit 1
