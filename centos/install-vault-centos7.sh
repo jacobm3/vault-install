@@ -14,6 +14,9 @@ if [ $EUID -ne 0 ]; then
     exit 1
 fi
 
+# Setup hosts entry in case DNS not present
+ echo `ifconfig eth0 | grep 'inet ' | awk '{print $2}'`  `hostname` >> /etc/hosts
+
 BASEUSER=centos
 
 CERTS_FILE=/home/${BASEUSER}/certs.tgz
@@ -22,6 +25,8 @@ if [ ! -f "$CERTS_FILE" ]; then
     exit 1
 fi
 tar -C /home/${BASEUSER} -xvf $CERTS_FILE
+cp /home/${BASEUSER}/ca.crt /etc/pki/ca-trust/source/anchors/vault-ca.pem
+update-ca-trust
 
 # Disable Vault TLS verification, unless the centos update-ca-trust magically works for you
 grep 'VAULT_SKIP_VERIFY=true' ~/.bashrc &>/dev/null || echo 'export VAULT_SKIP_VERIFY=true' >> ~/.bashrc
