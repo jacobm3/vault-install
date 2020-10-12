@@ -10,7 +10,7 @@ fi
 
 NODENAME=$1
 if [ $EUID -ne 0 ]; then
-    echo "This script should be run as root." > /dev/stderr
+    echo "This script should be run as root so it can install system packages and certificates." > /dev/stderr
     exit 1
 fi
 
@@ -97,10 +97,11 @@ storage "raft" {
 }
 
 listener "tcp" {
-  address       = "0.0.0.0:8200"
-  cluster_address = "0.0.0.0:8201"
-  tls_cert_file = "/etc/ssl/vault/vault.crt"
-  tls_key_file  = "/etc/ssl/vault/vault.key"
+  address       =      "0.0.0.0:8200"
+  cluster_address =    "0.0.0.0:8201"
+  tls_cert_file =      "/etc/ssl/vault/vault.crt"
+  tls_key_file  =      "/etc/ssl/vault/vault.key"
+  tls_client_ca_file = "/etc/ssl/vault/ca.crt"
 }
 
 cluster_addr = "https://${NODENAME}:8201"
