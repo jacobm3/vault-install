@@ -97,10 +97,10 @@ storage "raft" {
 }
 
 listener "tcp" {
-  address       =      "0.0.0.0:8200"
-  cluster_address =    "0.0.0.0:8201"
-  tls_cert_file =      "/etc/ssl/vault/vault.crt"
-  tls_key_file  =      "/etc/ssl/vault/vault.key"
+  address            = "0.0.0.0:8200"
+  cluster_address    = "0.0.0.0:8201"
+  tls_cert_file      = "/etc/ssl/vault/vault.crt"
+  tls_key_file       = "/etc/ssl/vault/vault.key"
   tls_client_ca_file = "/etc/ssl/vault/ca.crt"
 }
 
