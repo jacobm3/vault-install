@@ -21,7 +21,7 @@ if [ ! -f "$CERTS_FILE" ]; then
     echo "Certificate tarball not found! $CERTS_FILE"
     exit 1
 fi
-tar -C /home/${BASEUSER} $CERTS_FILE
+tar -C /home/${BASEUSER} xvf $CERTS_FILE
 
 # Disable Vault TLS verification, unless the centos update-ca-trust magically works for you
 grep 'VAULT_SKIP_VERIFY=true' ~/.bashrc &>/dev/null || echo 'export VAULT_SKIP_VERIFY=true' >> ~/.bashrc
