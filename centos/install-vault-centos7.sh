@@ -15,7 +15,7 @@ if [ $EUID -ne 0 ]; then
 fi
 
 
-CERTS_FILE=certs.tgz
+CERTS_FILE=~/certs.tgz
 if [ ! -f "$CERTS_FILE" ]; then
     echo "Certificate tarball not found! $CERTS_FILE"
     exit 1
