@@ -36,12 +36,13 @@ grep 'VAULT_SKIP_VERIFY=true' ~/.bashrc &>/dev/null || echo 'export VAULT_SKIP_V
 # Install prerequisites
 echo "Updating system packages"
 yum update
-for cmd in unzip vim openssl tree curl; do
-if ! command -v $cmd &> /dev/null
-then
-    yum install -y $cmd
-fi
-done
+yum install -y unzip vim openssl tree curl wget
+# for cmd in unzip vim openssl tree curl wget; do
+# if ! command -v $cmd &> /dev/null
+# then
+#     yum install -y $cmd
+# fi
+# done
 
 # Install jq
 yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
@@ -49,7 +50,17 @@ yum install jq -y
 
 export PATH=${PATH}:/usr/local/bin
 
-# Install latest Vault version if needed
+# Install latest Terraform to manage Vault namespaces as code
+URL=`curl -s $tmpout https://www.terraform.io/downloads.html | grep linux_amd64.zip | cut -d'"' -f2`
+wget $URL
+file=`ls -tr terraform_*_linux_amd64.zip | tail -1`
+rm -f terraform
+unzip $file
+cp terraform /usr/local/bin
+terraform version
+
+
+# Install latest Vault 
 echo "Checking latest Vault version"
 tmpout=.vault.version.check.$$
 curl -s -o $tmpout https://www.vaultproject.io/downloads
