@@ -250,7 +250,7 @@ First node is the only node in cluster
 
 # Setup Remaining Nodes
 
-Run these commands on each additional node you wish to join to the cluster. 
+Run these commands on each additional node you wish to join to the cluster. Hostname resolution must be working at this point and the nodes should all be able to reach each other on TCP/8200 and TCP/8201. The TLS certificates and private key must be available to the Vault command during the joining process.
 
 ## Join to Cluster
 
