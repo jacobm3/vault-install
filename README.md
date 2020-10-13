@@ -59,6 +59,9 @@ For more information see:
 https://learn.hashicorp.com/tutorials/vault/getting-started-deploy#initializing-the-vault  
 https://www.vaultproject.io/docs/commands/operator/init  
 https://www.vaultproject.io/docs/concepts/seal  
+https://www.vaultproject.io/docs/internals/security  
+https://www.vaultproject.io/docs/internals/architecture  
+https://learn.hashicorp.com/tutorials/vault/production-hardening  
 
 ### Option 1 - Initializing with default 5 cleartext unseal keys
 
