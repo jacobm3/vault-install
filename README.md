@@ -48,7 +48,9 @@ These commands will download and execute the install script, which will do a yum
 
 Initialization is the process of configuring Vault. This only happens once when the server is started against a new backend that has never been used with Vault before. When running in HA mode, this happens once per cluster, not per server.
 
-During initialization, the encryption keys are generated, unseal keys are created, and the initial root token is setup. To initialize Vault use vault operator init. This is an unauthenticated request, but it only works on brand new Vaults with no data. The unseal key(s) and root token are a core part of Vault's security model and should be guarded closely. 
+During initialization, the encryption keys are generated, unseal keys are created, and the initial root token is setup. To initialize Vault use vault operator init. This is an unauthenticated request, but it only works on brand new Vaults with no data. 
+
+**The unseal key(s) and root token are a core part of Vault's security model and should be guarded closely.**
 
 Decisions around the unseal process include whether to use Shamir unseal keys, auto-unseal with a cloud key management system, and whether to use PGP to securely deliver unseal keys to their intended recipients.
 
