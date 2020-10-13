@@ -50,7 +50,7 @@ Initialization is the process of configuring Vault. This only happens once when 
 
 During initialization, the encryption keys are generated, unseal keys are created, and the initial root token is setup. To initialize Vault use vault operator init. This is an unauthenticated request, but it only works on brand new Vaults with no data. 
 
-**The unseal key(s) and root token are a core part of Vault's security model and should be guarded closely.**
+**The unseal key(s) and root token are a core part of Vault's security model. Guard them closely.**
 
 Decisions around the unseal process include whether to use Shamir unseal keys, auto-unseal with a cloud key management system, and whether to use PGP to securely deliver unseal keys to their intended recipients.
 
