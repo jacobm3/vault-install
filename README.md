@@ -1,5 +1,22 @@
 This repository can be used to quickly and easily setup a Vault cluster with raft integrated storage. It assumes you already have 3 VMs running, sudo access on each of them, and that you've generated a signed TLS key/certificate pair for the nodes to use. The `gen-vault-certs.sh` script can be used to in conjunction with `easy-rsa` to easily generate a CA and signed certs.
 
+- [Base Vault Install on Each Node](#base-vault-install-on-each-node)
+- [First Node Setup](#first-node-setup)
+  * [Initialize the First Vault Node](#initialize-the-first-vault-node)
+    + [Option 1 - Initializing with default 5 cleartext unseal keys](#option-1---initializing-with-default-5-cleartext-unseal-keys)
+    + [Option 2 - Initializing with a single cleartext unseal key](#option-2---initializing-with-a-single-cleartext-unseal-key)
+    + [Option 3 - Initializing with PGP unseal keys](#option-3---initializing-with-pgp-unseal-keys)
+      - [Decrypting PGP Unseal Keys](#decrypting-pgp-unseal-keys)
+  * [Unseal the First Node](#unseal-the-first-node)
+  * [Login and Apply Enterprise License](#login-and-apply-enterprise-license)
+  * [View Peer List](#view-peer-list)
+  * [Write First Secret](#write-first-secret)
+- [Setup Remaining Nodes](#setup-remaining-nodes)
+  * [Join to Cluster](#join-to-cluster)
+  * [View Status](#view-status)
+  * [Verify Data Replicated Across Cluster](#verify-data-replicated-across-cluster)
+- [Congratulations!](#congratulations-)
+
 # Base Vault Install on Each Node
 
 Copy the certificates/key tarball provided by your Hashicorp engineer to `~centos/certs.tgz` on each Vault server node. This can be generated with easy-rsa and the included `gen-vault-certs.sh` script. This will be used by the Vault listeners and in the challenge/response when nodes join the cluster.
