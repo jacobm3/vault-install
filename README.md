@@ -19,10 +19,10 @@ This repository can be used to quickly and easily setup a Vault cluster with raf
 
 # Base Vault Install on Each Node
 
-Copy the certificates/key tarball provided by your Hashicorp engineer to `~centos/certs.tgz` on each Vault server node. This can be generated with easy-rsa and the included `gen-vault-certs.sh` script. This will be used by the Vault listeners and in the challenge/response when nodes join the cluster.
+Copy the certificates/key tarball provided by your Hashicorp engineer (or your internal certificate authority) to `~centos/certs.tgz` on each Vault server node. This can be generated with easy-rsa and the included `gen-vault-certs.sh` script. This will be used by the Vault listeners and in the challenge/response when nodes join the cluster.
 
     $ cd ~centos
-    $ tar ztf certs.tgz
+    $ tar ztf certs.tgz  # should look like this inside
     ca.crt
     vault.crt
     vault.key
