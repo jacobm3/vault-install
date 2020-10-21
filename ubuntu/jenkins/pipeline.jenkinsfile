@@ -1,0 +1,33 @@
+pipeline {
+agent any
+    environment {
+        VAULT_ADDR="https://vault1:8200"
+        ROLE_ID="5a6c59a8-ee30-8bcb-86f8-bc8d7479cdc3"
+        SECRET_ID=credentials("SECRET_ID")
+        SECRETS_PATH="secrets/creds/app-a/dev"
+    }
+stages {
+      stage('Stage 0') {
+          steps {
+            sh '''
+            set +x
+            export PATH=/usr/local/bin:${PATH}
+            
+            # AppRole Auth request
+            export VAULT_TOKEN=$(vault write auth/approle/login -format=json role_id=$ROLE_ID secret_id=$SECRET_ID | jq -r .auth.client_token)
+            
+            PASSWORD=$(vault kv get -format=json secrets/creds/dev | jq -r .data.password)
+            echo
+            echo "Your password is $PASSWORD"
+            
+            echo
+            echo "Your SSL certificate and key PEM bundle is:"
+            echo
+            vault write pki/issue/hashicorp-test-dot-com common_name=db1.hashicorp-test.com format=pem_bundle
+
+            '''
+          }
+      }
+    }
+}
+
