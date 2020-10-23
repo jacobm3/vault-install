@@ -33,3 +33,10 @@ path "auth/token/*" {
    capabilities = ["create", "read", "update", "delete", "list", "sudo"]
 }
 
+path "kv/*" {
+    ["create", "read", "update", "delete", "list"]
+}
+
+path "transit/*" {
+    ["create", "read", "update", "delete", "list"]
+}

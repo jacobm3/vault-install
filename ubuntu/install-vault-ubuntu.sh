@@ -125,6 +125,8 @@ cluster_addr = "https://${NODENAME}:8201"
 api_addr = "https://${NODENAME}:8200"
 
 ui = true
+
+plugin_directory = "/etc/vault.d/plugins"
 EOF
 
 echo "Enabling vault.service in systemd"
