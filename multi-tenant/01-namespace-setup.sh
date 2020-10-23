@@ -45,21 +45,21 @@ done
 # Setup policies for each project
 for PROJECT in $PROJECTS; do
 
-    # Create a policy giving full control over these engines
+    # Create a policy giving full control over this project's engines
     vault policy write ${PROJECT}-admin - <<EOF
         path "${PROJECT}/*" {
             capabilities = ["create", "read", "update", "delete", "list"]
         }
 EOF
 
-    # Create a policy giving full control over these engines
+    # Create a policy that can only read kv paths
     vault policy write ${PROJECT}-kv-reader - <<EOF
         path "${PROJECT}/kv/*" {
             capabilities = ["read", "list"]
         }
 EOF
 
-    # Create a policy giving full control over these engines
+    # Create a policy that can read and write kv paths
     vault policy write ${PROJECT}-kv-writer - <<EOF
         path "${PROJECT}/kv/*" {
             capabilities = ["create", "read", "update", "delete", "list"]
@@ -77,7 +77,7 @@ EOF
         }
 EOF
 
-    # Create a policy with access to the pii keyring
+    # Create a policy with access to the card keyring
     vault policy write ${PROJECT}-card - <<EOF
         path "${PROJECT}/transit/+/card" {
             capabilities = ["create", "read", "update", "delete", "list"]
