@@ -99,6 +99,10 @@ for PROJECT in $PROJECTS; do
 
 done
 
+# Create user that can read from each of the KV paths in the coreteam namespace
+vault write auth/userpass/users/super-reader password="pass" \
+    policies=goldfish-kv-reader,turtle-kv-reader,monkey-kv-reader
+
 vault secrets list
 vault policy list
 vault policy read 
