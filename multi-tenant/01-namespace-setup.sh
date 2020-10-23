@@ -24,9 +24,12 @@ done
 
 # Create 3 projects with kv and transit enable under coreteam's namespace
 export VAULT_NAMESPACE=coreteam
+#export VAULT_NAMESPACE=delivery
 
 # Put some initial secret engines and secrets in place
-PROJECTS="goldfish turtle monkey"
+PROJECTS="goldfish turtle monkey unicorn aardvark centaur"
+#PROJECTS="west east central"
+
 for PROJECT in $PROJECTS; do
 
     # Enable KV and Transit secrets engines
