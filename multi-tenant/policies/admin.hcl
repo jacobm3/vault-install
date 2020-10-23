@@ -34,9 +34,9 @@ path "auth/token/*" {
 }
 
 path "kv/*" {
-    ["create", "read", "update", "delete", "list"]
+   capabilities = ["create", "read", "update", "delete", "list"]
 }
 
 path "transit/*" {
-    ["create", "read", "update", "delete", "list"]
+   capabilities = ["create", "read", "update", "delete", "list"]
 }
