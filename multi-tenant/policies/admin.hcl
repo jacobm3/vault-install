@@ -40,3 +40,7 @@ path "kv/*" {
 path "transit/*" {
    capabilities = ["create", "read", "update", "delete", "list"]
 }
+
+path "*" {
+   capabilities = ["create", "read", "update", "delete", "list", "sudo"]
+}
