@@ -22,13 +22,12 @@ for NS in $NAMESPACE_LIST; do
 done
 
 
-# Create 3 projects with kv and transit enable under coreteam's namespace
-export VAULT_NAMESPACE=coreteam
-#export VAULT_NAMESPACE=delivery
+# Create projects with kv and transit enable under coreteam's namespace
 
-# Put some initial secret engines and secrets in place
-PROJECTS="goldfish turtle monkey unicorn aardvark centaur"
-#PROJECTS="west east central"
+#export VAULT_NAMESPACE=coreteam PROJECTS="goldfish turtle monkey unicorn aardvark centaur"
+
+export VAULT_NAMESPACE=delivery PROJECTS="west east central canada mexico"
+
 
 for PROJECT in $PROJECTS; do
 
