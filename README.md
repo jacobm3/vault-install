@@ -131,6 +131,13 @@ https://www.vaultproject.io/docs/concepts/pgp-gpg-keybase
     It is possible to generate new unseal keys, provided you have a quorum of
     existing unseal keys shares. See "vault operator rekey" for more information.
 
+Example with 3 PGP recipients:
+
+    $ vault operator init -key-shares=3 -key-threshold=3 -pgp-keys=jacobm.asc,user1.asc,user2.asc
+    Unseal Key 1: wcDMA9FTNzae4vyUAQwADy...EWOgA=
+    Unseal Key 2: wcDMA5WNvc4CPxe...EjfgA=
+    Unseal Key 3: wcDMA7...Wjbg
+
 #### Decrypting PGP Unseal Keys
 
 PGP or GPG use varies by operating system. These instructions work in Linux/WSL:
